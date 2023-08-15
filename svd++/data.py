@@ -14,7 +14,7 @@ class LoadData:
 
         with open(self.path) as f:
             for line in f.readlines():
-                # uesr_id::item_id::rating
+                # user_id::item_id::rating
                 splited = line.split("::")
                 data.append([int(i) for i in splited[:3]])
 
