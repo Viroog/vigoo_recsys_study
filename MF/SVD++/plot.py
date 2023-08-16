@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 x_epoch = []
 y_loss = []
 
-with open ('./log.txt') as f:
+with open ('log.txt') as f:
     for line in f.readlines():
         splited = line.split(',')
         if len(splited) > 1:
