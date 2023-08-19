@@ -26,4 +26,6 @@ class Data:
 
         train_data, test_data = np.array(train_data), np.array(test_data)
 
+        print('load data fininshed!')
+
         return train_data, test_data
