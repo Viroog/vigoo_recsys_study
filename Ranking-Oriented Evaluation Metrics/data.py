@@ -33,9 +33,9 @@ class Data:
 
         train_data, test_data = np.array(train_data), np.array(test_data)
 
-        train_data, test_data = self.mapping(train_data, test_data)
+        train_data, test_data, total_item = self.mapping(train_data, test_data)
 
-        return train_data, test_data
+        return train_data, test_data, total_item
 
     def mapping(self, train_data, test_data):
         user_dict, item_dict = {}, {}
@@ -66,5 +66,7 @@ class Data:
             user, item, rating = test_data[i, :]
             test_result.append([user_dict[user], item_dict[item], rating])
 
-        return np.array(train_result), np.array(test_result)
+        total_item_id = [item_dict[item_id] for item_id in item_ids]
+
+        return np.array(train_result), np.array(test_result), total_item_id
 

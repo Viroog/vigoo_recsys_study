@@ -10,7 +10,7 @@ class PopRank:
         self.data = data
         self.b_i = {}
 
-    def train(self):
+    def train(self, return_val=1):
         self.i_u_dict = {}
         self.u_i_dict = {}
 
@@ -32,8 +32,10 @@ class PopRank:
 
         self.b_i = dict(sorted(self.b_i.items(), key=lambda x: x[1], reverse=True))
 
-    # @5，选择预测分数最高的前五个
-    def test(self, data, topk=5):
+        if return_val:
+            return self.u_i_dict, self.b_i
+
+    def test(self, data):
 
         pred_rec, real_buy = {}, {}
 
@@ -49,10 +51,8 @@ class PopRank:
             if user not in pred_rec.keys():
                 result = []
 
-                # 对未评价过的物品进行评分预测，并选择最高的k个
+                # 对未评价过的物品进行评分预测
                 for (k, v) in self.b_i.items():
-                    if len(result) >= topk:
-                        break
 
                     if k not in self.u_i_dict[user]:
                         result.append(k)
