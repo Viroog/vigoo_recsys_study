@@ -38,7 +38,7 @@ class Data:
 
         for i in range(len(data)):
             user, item, rating = data[i, :]
-            implicit_matrix[user, item] = 1
+            implicit_matrix[user, item] = 1.0
 
         return implicit_matrix
 
@@ -49,7 +49,7 @@ class DataSet(data.Dataset):
 
         self.data = data
 
-    # 重现方法
+    # 重写方法
     def __len__(self):
         return len(self.data)
 

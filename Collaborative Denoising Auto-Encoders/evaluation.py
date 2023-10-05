@@ -13,11 +13,12 @@ class Evaluation:
         cnt = 0
 
         for i in range(self.y.shape[0]):
-            # 获得值最高的5个
+            # 获得值最高的k个
             topk_items = np.argsort(self.y_hat[i, :])[-self.topk:]
+            scores = self.y_hat[i, topk_items]
 
             # 取出测试集中用户买过的物品
-            Iu = list(np.where(self.y[i, :] != 0)[0])
+            Iu = list(np.where(self.y[i, :] != 0.0)[0])
 
             if len(Iu) > 0:
                 cnt += 1
@@ -34,10 +35,11 @@ class Evaluation:
             topk_items = np.argsort(self.y_hat[i, :])[-self.topk:]
 
             # 取出测试集中用户买过的物品
-            Iu = list(np.where(self.y[i, :] != 0)[0])
+            Iu = list(np.where(self.y[i, :] != 0.0)[0])
 
             if len(Iu) > 0:
                 cnt += 1
                 total_recall += len(set(Iu).intersection(set(topk_items))) / len(Iu)
 
         return total_recall / cnt
+
