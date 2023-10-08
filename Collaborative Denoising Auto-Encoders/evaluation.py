@@ -15,7 +15,6 @@ class Evaluation:
         for i in range(self.y.shape[0]):
             # 获得值最高的k个
             topk_items = np.argsort(self.y_hat[i, :])[-self.topk:]
-            scores = self.y_hat[i, topk_items]
 
             # 取出测试集中用户买过的物品
             Iu = list(np.where(self.y[i, :] != 0.0)[0])

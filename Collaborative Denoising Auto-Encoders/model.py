@@ -13,10 +13,15 @@ class CDAE(nn.Module):
         self.hidden_size = hidden_size
         self.corrupted_ration = corrupted_ration
 
+        self.dropout = nn.Dropout(p=self.corrupted_ration)
         # user_embedding, 维度是hidden_size，因为后面要和隐藏层的输出相加
         self.user_embedding = nn.Embedding(user_nums, hidden_size)
         # encoder-decoder就是先降维后升维，hidden_size远小于输入，用于寻找输入的模式
         # bias默认设置为True
+        # self.encoder = nn.Sequential(
+        #     nn.LayerNorm(self.item_nums),
+        #     nn.Linear(item_nums, hidden_size)
+        # )
         self.encoder = nn.Linear(item_nums, hidden_size)
         self.decoder = nn.Linear(hidden_size, item_nums)
 
@@ -25,11 +30,12 @@ class CDAE(nn.Module):
 
     # x是一个矩阵
     def forward(self, user_ids, input_mat):
+
         # dropout层已经已经自动处理了在训练过程中放大1/(1-p)倍，而在测试时关闭，不需要我手动放大了
         input_mat = F.dropout(input_mat, p=self.corrupted_ration, training=self.training)
-
-        hidden_output = torch.sigmoid(self.encoder(input_mat) + self.user_embedding(user_ids))
-        output = self.decoder(hidden_output)
+        # input_mat = self.dropout(input_mat)
+        hidden_output = torch.relu(self.encoder(input_mat) + self.user_embedding(user_ids))
+        output = torch.sigmoid(self.decoder(hidden_output))
 
         return output
 
@@ -43,7 +49,7 @@ class CDAE(nn.Module):
 
                 user_ids = user_ids.cuda()
                 input_mat = input_mat.float().cuda()
-                output = torch.sigmoid(self.forward(user_ids, input_mat))
+                output = self.forward(user_ids, input_mat)
 
                 # 将在训练集中用户已经购买过的物品预测评分置为最小值
                 output = output.masked_fill(
