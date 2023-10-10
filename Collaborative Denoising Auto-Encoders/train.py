@@ -78,7 +78,7 @@ for epoch in range(epochs):
 
         total_loss += loss
 
-    print(f"epoch: {epoch + 1}, loss: {total_loss / len(train_loader)}")
+    print(f"epoch: {epoch + 1}, loss: {total_loss / user_nums}")
 
 # model_path = 'cdae.pth'
 # torch.save(cdae, model_path)
