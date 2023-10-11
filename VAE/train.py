@@ -38,34 +38,34 @@ test_dataloader = data.DataLoader(test_dataset, batch_size=batch_size)
 lr = 1e-4
 optimizer = optim.Adam(vae.parameters(), lr=lr)
 
-epochs = 1000
-vae.train()
-for epoch in range(epochs):
-    total_loss = 0
-    for batch in train_dataloader:
-        user_ids, input_mat = batch
+# epochs = 1000
+# vae.train()
+# for epoch in range(epochs):
+#     total_loss = 0
+#     for batch in train_dataloader:
+#         user_ids, input_mat = batch
+#
+#         input_mat = input_mat.float().cuda()
+#
+#         # prob: (batch_size, item_nums)
+#         # mu: (batch_size, hidden_size)
+#         # logvar: (batch_size, hidden_size)
+#         prob, mu, logvar = vae.forward(input_mat)
+#
+#         loss = my_loss_function(prob, input_mat, mu, logvar)
+#
+#         optimizer.zero_grad()
+#         loss.backward()
+#
+#         optimizer.step()
+#
+#         total_loss += loss
+#
+#     print(f"epoch: {epoch + 1}, loss: {total_loss / len(train_dataloader)}")
 
-        input_mat = input_mat.float().cuda()
+# torch.save(vae, 'vae.pth')
 
-        # prob: (batch_size, item_nums)
-        # mu: (batch_size, hidden_size)
-        # logvar: (batch_size, hidden_size)
-        prob, mu, logvar = vae.forward(input_mat)
-
-        loss = my_loss_function(prob, input_mat, mu, logvar)
-
-        optimizer.zero_grad()
-        loss.backward()
-
-        optimizer.step()
-
-        total_loss += loss
-
-    print(f"epoch: {epoch + 1}, loss: {total_loss / len(train_dataloader)}")
-
-torch.save(vae, 'vae.pth')
-
-# vae = torch.load('vae.pth')
+vae = torch.load('vae.pth')
 
 vae.eval()
 preds = vae.predict(train_dataloader)
@@ -74,3 +74,5 @@ k = 5
 evaluation = Evaluation(y=test_data, y_hat=preds, k=k)
 print(f"Pre@{k}: {evaluation.precision()}")
 print(f"Rec@{k}: {evaluation.recall()}")
+print(f"NDCG@{k}: {evaluation.ndcg()}")
+print(f"MRR@{k}: {evaluation.mrr()}")
