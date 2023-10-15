@@ -34,4 +34,4 @@ for epoch in range(args.epochs):
         # (batch_size, n)
         user, seq, pos, neg = np.array(user), np.array(seq), np.array(pos), np.array(neg)
 
-        sasrec.forward()
+        sasrec.forward(seq, pos, neg)
