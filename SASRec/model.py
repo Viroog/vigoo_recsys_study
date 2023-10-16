@@ -3,6 +3,7 @@ import torch.nn as nn
 
 import numpy as np
 
+
 # 这里实现两种模型: 1) 按照论文的模型实现
 #                2) 利用Pytorch中的TransformerEncoderLayer和TransformerEncoder构建
 # 两个模型的主要差距在于Dropout和Layer Norm的时机，前馈神经网络的架构也不太一样
@@ -31,8 +32,6 @@ class SASRec(nn.Module):
         # 将batch_fist设置为True，才是(batch_size, seq, feature_dim)，要不然是(seq, batch_size, feature_dim)
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=self.d, nhead=self.head_nums, dim_feedforward=self.n, dropout=self.dropout_rate, batch_first=True)
         self.encoder = nn.TransformerEncoder(encoder_layer=self.encoder_layer, num_layers=self.block_nums)
-
-        self.cuda()
 
     def forward(self, seq, pos, neg):
         # shape: (batch_size, n)
@@ -68,5 +67,6 @@ class SASRec(nn.Module):
 
         return pos_pred, neg_pred
 
-    def test(self):
+    def predict(self, seq):
         pass
+
