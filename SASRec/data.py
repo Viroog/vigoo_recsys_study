@@ -33,7 +33,7 @@ class Data:
         self.item_nums = max_item_nums
 
         user_train, user_valid, user_test = {}, {}, {}
-        for user_id in u_i_dict.keys():
+        for user_id in u_i_dict:
             user_feedback_num = len(u_i_dict[user_id])
 
             # 交互数量小于3，无训练集和测试集

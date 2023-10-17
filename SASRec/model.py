@@ -1,9 +1,8 @@
+import numpy as np
 import torch
 import torch.nn as nn
 
-import numpy as np
-
-
+#
 # 这里实现两种模型: 1) 按照论文的模型实现
 #                2) 利用Pytorch中的TransformerEncoderLayer和TransformerEncoder构建
 # 两个模型的主要差距在于Dropout和Layer Norm的时机，前馈神经网络的架构也不太一样
@@ -24,14 +23,19 @@ class SASRec(nn.Module):
         # 下三角形的单位矩阵，并将数据放到gpu上
         self.mask = torch.tril(torch.ones((self.n, self.n))).cuda()
 
-        self.item_embedding = nn.Embedding(self.item_nums + 1, self.d)
+        # self.mask = (torch.triu(torch.ones((self.n, self.n))) == 0).cuda()
+
+        self.item_embedding = nn.Embedding(self.item_nums + 1, self.d, padding_idx=0)
         self.position_embedding = nn.Embedding(self.n, self.d)
         self.dropout = nn.Dropout(p=self.dropout_rate)
 
         # 里面带有一个self-attention和一个FFN
         # 将batch_fist设置为True，才是(batch_size, seq, feature_dim)，要不然是(seq, batch_size, feature_dim)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=self.d, nhead=self.head_nums, dim_feedforward=self.n, dropout=self.dropout_rate, batch_first=True)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=self.d, nhead=self.head_nums, dim_feedforward=self.d,
+                                                        dropout=self.dropout_rate, batch_first=True)
         self.encoder = nn.TransformerEncoder(encoder_layer=self.encoder_layer, num_layers=self.block_nums)
+
+        self.cuda()
 
     def forward(self, seq, pos, neg):
         # shape: (batch_size, n)
@@ -42,7 +46,7 @@ class SASRec(nn.Module):
         # np.tile用于在某个维度上复试数组内容
         # reps代表每个维度上复制次数的参数 [dim0, dim1, ...]
         # shape: (batch_size, n)
-        position = np.tile(np.array(range(pos.shape[1])), reps=[pos.shape[0], 1])
+        position = np.tile(np.array(range(seq.shape[1])), reps=[seq.shape[0], 1])
         position = torch.LongTensor(position).cuda()
         # shape: (batch_size, n, d)
         position_embed = self.position_embedding(position)
@@ -67,6 +71,34 @@ class SASRec(nn.Module):
 
         return pos_pred, neg_pred
 
-    def predict(self, seq):
-        pass
+    def predict(self, seq, item_idxs):
 
+        seq, item_idxs = torch.LongTensor(seq).cuda(), torch.LongTensor(item_idxs).cuda()
+
+        # shape: (1, n, d)
+        seq_embed = self.item_embedding(seq)
+
+        # shape: (1, n)
+        position = np.tile(np.array(range(seq.shape[1])), reps=[seq.shape[0], 1])
+        position = torch.LongTensor(position).cuda()
+        # shape: (1, n, d)
+        position_embed = self.position_embedding(position)
+
+        input_embed = self.dropout(seq_embed + position_embed)
+
+        # shape: (1, n, d)
+        output = self.encoder(input_embed, self.mask)
+
+        # self-attention的最后一个输出，即用户偏好的集大成者
+        # shape: (1, 50)
+        last_output = output[:, -1, :]
+
+        # shape: (101, 50)
+        item_embeds = self.item_embedding(item_idxs)
+
+        # 第一个unsqueeze是让其从一维向量变成二维矩阵进行相乘
+        # 矩阵相乘后的shape: (1, 101, 1)
+        # 再进行维度压缩的shape: (1, 101)
+        preds = item_embeds.matmul(last_output.unsqueeze(-1)).squeeze(-1)
+
+        return preds
