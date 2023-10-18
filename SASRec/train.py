@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 from data import Data, WarpSampler
-from model import SASRec
+from model import SASRec, SASRec2
 from evaluation import Evaluation
 import torch.optim as optim
 import torch.nn as nn
@@ -33,6 +33,7 @@ if __name__ == '__main__':
     batch_nums = len(user_train) // args.batch_size
 
     sasrec = SASRec(args.n, item_nums, args.d, args.dropout_rate, args.block_nums, args.head_nums)
+    # sasrec = SASRec2(args.n, item_nums, args.d, args.dropout_rate, args.block_nums, args.head_nums)
 
     # 这个初始化参数很重要，指标提升了很多
     for name, param in sasrec.named_parameters():
