@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', default='./data/ml-1m.txt')
     parser.add_argument('--batch_size', default=128)
     parser.add_argument('--lr', default=0.001)
-    parser.add_argument('--epochs', default=300)
+    parser.add_argument('--epochs', default=200)
     parser.add_argument('--n', default=200)
     parser.add_argument('--d', default=50)
     parser.add_argument('--block_nums', default=2)
@@ -32,8 +32,8 @@ if __name__ == '__main__':
     sampler = WarpSampler(user_train, user_nums, item_nums, args.batch_size, args.n, 3)
     batch_nums = len(user_train) // args.batch_size
 
-    sasrec = SASRec(args.n, item_nums, args.d, args.dropout_rate, args.block_nums, args.head_nums)
-    # sasrec = SASRec2(args.n, item_nums, args.d, args.dropout_rate, args.block_nums, args.head_nums)
+    # sasrec = SASRec(args.n, item_nums, args.d, args.dropout_rate, args.block_nums, args.head_nums).cuda()
+    sasrec = SASRec2(args.n, item_nums, args.d, args.dropout_rate, args.block_nums, args.head_nums, use_conv=False).cuda()
 
     # 这个初始化参数很重要，指标提升了很多
     for name, param in sasrec.named_parameters():
@@ -43,6 +43,7 @@ if __name__ == '__main__':
             pass  # just ignore those failed init layers
 
     optimizer = optim.Adam(sasrec.parameters(), lr=args.lr, betas=(0.9, 0.98))
+    # optimizer = optim.AdamW(sasrec.parameters(), lr=args.lr)
 
     sasrec.train()
     for epoch in range(args.epochs):
