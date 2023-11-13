@@ -11,7 +11,7 @@ import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 
 train_set = torchvision.datasets.FashionMNIST(
-    root='./data/FashionMNIST',
+    root='./Data/FashionMNIST',
     train=True,
     download=True,
     transform=transforms.Compose([

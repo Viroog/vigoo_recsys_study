@@ -3,7 +3,7 @@ import numpy as np
 
 # 只保留分数为4和5的(user, item)
 class Data:
-    def __init__(self, path='../data/ml-100k/'):
+    def __init__(self, path='../Data/ml-100k/'):
         self.path = path
 
     def get_data(self):

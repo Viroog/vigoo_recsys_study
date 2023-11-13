@@ -3,7 +3,7 @@ import numpy as np
 
 class Data:
     # 根据课件制定默认的路径，可以通过参数改变
-    def __init__(self, path='../data/ml-100k', file_name='u1'):
+    def __init__(self, path='../Data/ml-100k', file_name='u1'):
         self.train_file_path = path + '/' + file_name + '.base'
         self.test_file_path = path + '/' + file_name + '.test'
 

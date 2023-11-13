@@ -23,7 +23,7 @@ param_values = [v for v in parameters.values()]
 for lr, batch_size, shuffle in product(*param_values):
 
     train_set = torchvision.datasets.FashionMNIST(
-        root='./data/FashionMNIST',
+        root='./Data/FashionMNIST',
         train=True,
         download=True,
         transform=transforms.Compose([

@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 
 
 train_set = torchvision.datasets.FashionMNIST(
-    root='./data/FashionMNIST',
+    root='./Data/FashionMNIST',
     train=True,
     download=True,
     transform=transforms.Compose([

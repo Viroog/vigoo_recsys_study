@@ -13,7 +13,8 @@ if __name__ == '__main__':
 
     # 整合参数，比较标准
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', default='./data/ml-1m.txt')
+    # parser.add_argument('--path', default='./Data/ml-1m.txt')
+    parser.add_argument('--path', default='./my_processed_data/ml-1m.txt')
     parser.add_argument('--batch_size', default=128)
     parser.add_argument('--lr', default=0.001)
     parser.add_argument('--epochs', default=200)

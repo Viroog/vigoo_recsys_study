@@ -148,7 +148,7 @@ class Evaluation:
             for i, item in enumerate(pred):
                 if item in real:
                     # I:the whole item set
-                    # Iu: preferred items by user u in training data
+                    # Iu: preferred items by user u in training Data
                     # 分母: I - Iu
                     tmp += (i + 1) / (total_item - len(u_i_dict[k]))
 

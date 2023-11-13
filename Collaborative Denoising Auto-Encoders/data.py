@@ -18,14 +18,14 @@ class Data:
 
         data = []
 
-        if self.path == '../data/ml-1m/ratings.dat':
+        if self.path == '../Data/ml-1m/ratings.dat':
             with open(self.path, 'r') as f:
                 for line in f.readlines():
                     splited = line.split("::")
                     user, item, rating, _ = splited
                     # user和item序号减1，从0开始
                     data.append([int(user) - 1, int(item) - 1, int(rating)])
-        elif self.path == '../data/ml-20m/ratings.csv':
+        elif self.path == '../Data/ml-20m/ratings.csv':
             df = pd.read_csv(self.path, encoding='gbk')
 
             for i in range(len(df)):

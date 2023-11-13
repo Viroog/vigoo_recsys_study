@@ -3,7 +3,7 @@ from model import ItemCF, UserCF
 from evaluation import Evaluation
 
 train_data, test_data = Data("../data/ml-100k/").get_data()
-print("load data finished...")
+print("load Data finished...")
 user_nums = 943
 item_nums = 1682
 K = 50

@@ -25,7 +25,7 @@ class LoadData:
 
         # pre-processing
         train_data, test_data = self.mapping(train_data), self.mapping(train_data)
-        print('load data finish!')
+        print('load Data finish!')
         return train_data, test_data
 
     # 原数据的id不是从0开始，将id调整为从0开始的，连续的id
@@ -53,4 +53,4 @@ class LoadData:
 
 
 # for test
-# train_data, test_data = LoadData(path='../data/ml-1m/ratings.dat').get_data()
+# train_data, test_data = LoadData(path='../Data/ml-1m/ratings.dat').get_data()

@@ -9,7 +9,7 @@ from evaluation import Evaluation
 from model import CDAE
 
 dataloader = Data(path='../data/ml-1m/ratings.dat')
-# dataloader = Data(path='../data/ml-20m/ratings.csv')
+# dataloader = Data(path='../Data/ml-20m/ratings.csv')
 train_data, test_data, user_nums, item_nums = dataloader.train_data, dataloader.test_data, dataloader.user_nums, dataloader.item_nums
 hidden_size, corrupted_ration = 50, 0.5
 cdae = CDAE(user_nums, item_nums, hidden_size, corrupted_ration)
@@ -19,7 +19,7 @@ batch_size, lr, epochs = 128, 0.001, 300
 ns = 3
 optimizer = optim.Adam(cdae.parameters(), lr=lr)
 
-# 构建一个pytorch的dataloader类 主要用到torch.utils.data.DataLoader和torch.utils.data.DataSet
+# 构建一个pytorch的dataloader类 主要用到torch.utils.Data.DataLoader和torch.utils.Data.DataSet
 # Dataloader接收DataSet作为输入
 train_dataset, test_dataset = DataSet(train_data), DataSet(test_data)
 train_loader = data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)

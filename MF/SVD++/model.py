@@ -7,7 +7,7 @@ import numpy as np
 
 class SVDpp:
     def __init__(self, data, k=20):
-        # training data
+        # training Data
         self.data = np.array(data)
         # latent dim，即用户向量和物品向量的维度
         self.k = k
@@ -50,11 +50,11 @@ class SVDpp:
         print('start training!')
         for epoch in range(epochs):
 
-            # 将0~len(self.data)-1的数据打乱，并返回一个列表
+            # 将0~len(self.Data)-1的数据打乱，并返回一个列表
             index_list = np.random.permutation(len(self.data))
             loss = 0
 
-            # 遍历整个training data
+            # 遍历整个training Data
             for i in range(len(self.data)):
                 index = index_list[i]
                 user, item, rating = self.data[index, :]
